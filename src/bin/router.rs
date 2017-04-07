@@ -28,7 +28,7 @@ fn main() {
     use football_matome::schema::feeds::dsl::*;
     let mut server = Nickel::new();
 
-    server.get("/football-matome/api", middleware! { |request, mut response|
+    server.get("/football-matome/api/get", middleware! { |request, mut response|
         use football_matome::models::Feed;
         let connection = establish_connection();
         let results = feeds
