@@ -1,0 +1,12 @@
+[package]
+name = "football-matome"
+version = "0.1.0"
+authors = ["Tomy <kazushige.tominaga@mkt-apps.com>"]
+
+[dependencies]
+hyper = "*"
+hyper-native-tls = "*"
+xml-rs = "*"
+diesel = { version = "0.11.0", features = ["mysql"] }
+diesel_codegen = { version = "0.11.0", features = ["mysql"] }
+dotenv = "0.8.0"
