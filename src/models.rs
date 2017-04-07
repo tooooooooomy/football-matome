@@ -1,3 +1,5 @@
+extern crate chrono;
+
 use schema::feeds;
 
 #[derive(Queryable)]
@@ -5,8 +7,8 @@ pub struct Feed {
     pub id: i32,
     pub title: String,
     pub link: String,
-    pub created_at: String,
-    pub updated_at: String,
+    pub created_at: chrono::prelude::NaiveDateTime,
+    pub updated_at: chrono::prelude::NaiveDateTime,
 }
 
 #[derive(Insertable)]

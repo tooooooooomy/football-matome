@@ -1,6 +1,8 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate diesel_codegen;
+extern crate rustc_serialize;
 extern crate dotenv;
+extern crate chrono;
 
 pub mod schema;
 pub mod models;
@@ -9,7 +11,7 @@ use diesel::prelude::*;
 use diesel::mysql::MysqlConnection;
 use dotenv::dotenv;
 use std::env;
-use self::models::{Feed, NewFeed};
+use self::models::{NewFeed};
 
 pub fn establish_connection() -> MysqlConnection {
     dotenv().ok();

@@ -7,6 +7,9 @@ authors = ["Tomy <kazushige.tominaga@mkt-apps.com>"]
 hyper = "*"
 hyper-native-tls = "*"
 xml-rs = "*"
-diesel = { version = "0.11.0", features = ["mysql"] }
+diesel = { version = "0.11.0", features = ["chrono"] }
 diesel_codegen = { version = "0.11.0", features = ["mysql"] }
 dotenv = "0.8.0"
+nickel = "*"
+rustc-serialize = "*"
+chrono = "*"
