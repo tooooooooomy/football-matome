@@ -6,10 +6,21 @@ import configMockStore from 'redux-mock-store'
 const middleware = [thunk]
 const mockStore = configMockStore(middleware)
 
-import {receiveFeeds, fetchFeeds } from './index'
+import {requestFeeds, receiveFeeds, fetchFeeds } from './'
+
+describe('requstFeeds', () => {
+    it ('should return REQUEST_FEEDS action', () => {
+        assert.deepStrictEqual(
+          requestFeeds(),
+          {
+            type: 'REQUEST_FEEDS',
+          }
+        )
+    })
+})
 
 describe('receiveFeeds', () => {
-    it ('should return RECEIVE_POST action', () => {
+    it ('should return RECEIVE_FEEDS action', () => {
         const feeds = [{
             id: 1,
             title: 'hoge',
