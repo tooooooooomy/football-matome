@@ -32,7 +32,7 @@ fn main() {
         use football_matome::models::Feed;
         let connection = establish_connection();
         let results = feeds
-            .limit(10)
+            .limit(20)
             .load::<Feed>(&connection)
             .expect("Error loading feeds");
 

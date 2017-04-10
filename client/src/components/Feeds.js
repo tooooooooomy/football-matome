@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react'
 import {Table, TableBody, TableRow, TableRowColumn} from 'material-ui/Table';
 
 
-const Feeds = ({feeds}) => (
-  <Table>
+const Feeds = ({ feeds, onClick }) => (
+  <Table onCellClick={onClick}>
     <TableBody displayRowCheckbox={false}>
     {feeds.map((feed, i) =>
       <TableRow key={i}>
         <TableRowColumn>
-          <a href={feed.link}>{feed.title}</a>
+          {feed.title}
         </TableRowColumn>
       </TableRow>
     )}

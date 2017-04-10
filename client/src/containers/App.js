@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchFeeds } from '../actions'
+import { fetchFeeds, openLink } from '../actions'
 import Feeds from '../components/Feeds'
 import MainAppBar from '../components/MainAppBar'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -17,16 +17,24 @@ class App extends Component {
     dispatch(fetchFeeds())
   }
 
+  handleClick = ( row, column, event ) => {
+    const { feeds } = this.props
+    openLink(feeds[row].link)
+  }
+
   render() {
     const { feeds, isFetching } = this.props
     const isEmpty = feeds === undefined || feeds.length === 0
     return (
       <MuiThemeProvider>
-        <div>
+        <div style={{ paddingTop: 64 }}>
           <MainAppBar />
           {isEmpty ? (isFetching ? <h2>Loading...</h2> : <h2>Empty.</h2>)
           : <div style = {{ opacity: isFetching ? 0.5 : 1 }}>
-              <Feeds feeds={feeds}/>
+              <Feeds
+                feeds={feeds}
+                onClick={this.handleClick}
+              />
             </div>
           }
         </div>

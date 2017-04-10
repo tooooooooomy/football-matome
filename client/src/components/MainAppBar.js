@@ -5,6 +5,7 @@ const MainAppBar = () => (
   <AppBar
     showMenuIconButton={false}
     title="Footballまとめ"
+    style={{ position: 'fixed', top: 0, margin: 0 }}
   />
 )
 
