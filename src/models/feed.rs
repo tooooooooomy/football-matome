@@ -22,7 +22,6 @@ struct NewFeed<'a> {
 }
 
 pub fn create_feed(conn: &MysqlConnection, title:&str, link:&str) {
-    use schema::feeds;
 
     let new_feed = NewFeed {
         title: title,
