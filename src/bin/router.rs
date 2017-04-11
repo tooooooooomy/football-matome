@@ -3,6 +3,7 @@ extern crate nickel;
 extern crate diesel;
 extern crate football_matome;
 extern crate rustc_serialize;
+extern crate dotenv;
 
 use nickel::{Nickel, HttpRouter};
 use self::football_matome::*;
@@ -11,6 +12,8 @@ use rustc_serialize::json;
 use nickel::status::*;
 use nickel::mimes::MediaType;
 use football_matome::models::Feed;
+use dotenv::dotenv;
+use std::env;
 
 #[derive(RustcDecodable, RustcEncodable)]
 pub struct ResFeed {
@@ -56,5 +59,7 @@ fn main() {
         return response.send(json_obj);
     });
 
-    server.listen("160.16.211.52:4000").unwrap();
+    dotenv().ok();
+    let api_port = env::var("API_ADDRESS").expect("API_ADDRESS must be set");
+    server.listen(api_port).unwrap();
 }
