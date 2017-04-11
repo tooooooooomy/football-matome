@@ -13,14 +13,14 @@ use nickel::mimes::MediaType;
 use dotenv::dotenv;
 use std::env;
 
-#[derive(RustcDecodable, RustcEncodable)]
+#[derive(RustcEncodable)]
 pub struct ResFeed {
     id: i32,
     title: String,
     link: String,
 }
 
-#[derive(RustcDecodable, RustcEncodable)]
+#[derive(RustcEncodable)]
 pub struct ResponseBody {
     data: Vec<ResFeed>,
 }
