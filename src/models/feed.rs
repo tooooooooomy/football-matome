@@ -1,5 +1,4 @@
-extern crate chrono;
-
+use chrono;
 use schema::feeds;
 use diesel;
 use diesel::ExecuteDsl;
