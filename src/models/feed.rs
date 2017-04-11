@@ -16,7 +16,7 @@ pub struct Feed {
 
 #[derive(Insertable)]
 #[table_name="feeds"]
-pub struct NewFeed<'a> {
+struct NewFeed<'a> {
     pub title: &'a str,
     pub link: &'a str,
 }
