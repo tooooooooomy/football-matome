@@ -1,11 +1,18 @@
 extern crate football_matome;
+extern crate dotenv;
 
 use football_matome::libraries::rss_retriever::feed::Feed;
 use football_matome::models::connection;
 use football_matome::models::feed;
+use dotenv::dotenv;
+use std::env;
 
 fn main() {
-    let connection = connection::establish_connection();
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set");
+
+    let connection = connection::establish_connection(&database_url);
 
     let url = "http://samuraigoal.doorblog.jp/index.rdf";
 

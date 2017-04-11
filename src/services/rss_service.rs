@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use models::connection;
+use diesel::mysql::MysqlConnection;
 use models::feed::Feed;
 use schema::feeds::dsl::*;
 
@@ -10,11 +10,10 @@ pub struct ResFeed {
     link: String,
 }
 
-pub fn retrieve() -> Vec<ResFeed>{
-    let connection = connection::establish_connection();
+pub fn retrieve(conn: &MysqlConnection) -> Vec<ResFeed>{
     let results = feeds
         .limit(20)
-        .load::<Feed>(&connection)
+        .load::<Feed>(conn)
         .expect("Error loading feeds");
 
     let mut v: Vec<ResFeed> = vec![];

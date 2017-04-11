@@ -21,7 +21,7 @@ struct NewFeed<'a> {
     pub link: &'a str,
 }
 
-pub fn create_feed(conn: &MysqlConnection, title:&str, link:&str) {
+pub fn create_feed(conn: &MysqlConnection, title: &str, link: &str) {
 
     let new_feed = NewFeed {
         title: title,
@@ -32,3 +32,4 @@ pub fn create_feed(conn: &MysqlConnection, title:&str, link:&str) {
         .execute(conn)
         .expect("Error saving new feed");
 }
+

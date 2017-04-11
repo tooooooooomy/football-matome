@@ -11,6 +11,7 @@ use nickel::mimes::MediaType;
 use dotenv::dotenv;
 use std::env;
 use football_matome::services::rss_service;
+use football_matome::models::connection;
 
 #[derive(RustcEncodable)]
 pub struct ResponseBody {
@@ -18,12 +19,16 @@ pub struct ResponseBody {
 }
 
 fn main() {
-    use football_matome::schema::feeds::dsl::*;
     let mut server = Nickel::new();
+    dotenv().ok();
 
     server.get("/football-matome/api/get", middleware! { |request, mut response|
+        let database_url = env::var("DATABASE_URL")
+            .expect("DATABASE_URL must be set");
+        let connection = connection::establish_connection(&database_url);
+
         let body = ResponseBody {
-            data: rss_service::retrieve(),
+            data: rss_service::retrieve(&connection),
         };
         let json_obj = json::encode(&body).unwrap();
         response.set(MediaType::Json);
@@ -31,7 +36,6 @@ fn main() {
         return response.send(json_obj);
     });
 
-    dotenv().ok();
     let api_port = env::var("API_PORT").expect("API_PORT must be set");
     server.listen(api_port).unwrap();
 }
