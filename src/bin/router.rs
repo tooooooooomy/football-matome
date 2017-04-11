@@ -37,5 +37,5 @@ fn main() {
     });
 
     let api_port = env::var("API_PORT").expect("API_PORT must be set");
-    server.listen(api_port).unwrap();
+    server.listen(&*api_port).unwrap();
 }
