@@ -7,7 +7,6 @@ use hyper::client::response::Response;
 use hyper::error::Result;
 use std::io::BufReader;
 use xml::reader::{EventReader, XmlEvent};
-use self::football_matome::*;
 
 pub struct Feed {
     url: String
@@ -93,7 +92,7 @@ impl Feed {
 }
 
 fn main() {
-    let connection = establish_connection();
+    let connection = football_matome::models::connection::establish_connection();
 
     let url = "http://samuraigoal.doorblog.jp/index.rdf";
 
@@ -103,7 +102,7 @@ fn main() {
 
     for (n, title) in title_list.iter().enumerate() {
         println!("{}\n{}\n", title, link_list[n]);
-        create_feed(&connection, title, &link_list[n]);
+        football_matome::models::feed::create_feed(&connection, title, &link_list[n]);
     }
 }
 

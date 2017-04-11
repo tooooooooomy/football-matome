@@ -6,12 +6,10 @@ extern crate rustc_serialize;
 extern crate dotenv;
 
 use nickel::{Nickel, HttpRouter};
-use self::football_matome::*;
 use diesel::prelude::*;
 use rustc_serialize::json;
 use nickel::status::*;
 use nickel::mimes::MediaType;
-use football_matome::models::Feed;
 use dotenv::dotenv;
 use std::env;
 
@@ -32,8 +30,8 @@ fn main() {
     let mut server = Nickel::new();
 
     server.get("/football-matome/api/get", middleware! { |request, mut response|
-        use football_matome::models::Feed;
-        let connection = establish_connection();
+        use football_matome::models::feed::Feed;
+        let connection = football_matome::models::connection::establish_connection();
         let results = feeds
             .limit(20)
             .load::<Feed>(&connection)
