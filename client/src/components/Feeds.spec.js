@@ -20,7 +20,7 @@ const feeds = [
 describe('Feeds', () => {
   it('return <ul>', () => {
     const wrapper = shallow(<Feeds feeds={feeds}/>)
-    assert.equal(wrapper.find('ul').length, 1);
-    assert.equal(wrapper.find('li').length, 2);
+    assert.equal(wrapper.find('Table').length, 1);
+    assert.equal(wrapper.find('TableRow').length, 2);
   })
 })

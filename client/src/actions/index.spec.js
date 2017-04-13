@@ -2,11 +2,12 @@ import assert from 'power-assert'
 import fetchMock from 'fetch-mock'
 import thunk from 'redux-thunk'
 import configMockStore from 'redux-mock-store'
+import WindowMock from 'window-mock'
 
 const middleware = [thunk]
 const mockStore = configMockStore(middleware)
 
-import {requestFeeds, receiveFeeds, fetchFeeds } from './'
+import {requestFeeds, receiveFeeds, fetchFeeds, openLink } from './'
 
 describe('requstFeeds', () => {
     it ('should return REQUEST_FEEDS action', () => {
@@ -53,7 +54,7 @@ describe('fetchFeeds', () => {
       ]
     }
 
-    fetchMock.getOnce('http://192.168.33.10/football-matome/api/get', response)
+    fetchMock.getOnce('api/get', response)
 
     store.dispatch(fetchFeeds())
       .then(() => {
@@ -64,5 +65,16 @@ describe('fetchFeeds', () => {
 
         done()
       })
+  })
+})
+
+describe('openLink', () => {
+  it('set link to window.location.href', () => {
+    let windowMock = new WindowMock
+    global.window = windowMock
+    const link = 'http://hoge.com'
+    openLink(link)
+
+    assert(link, global.window.location.href)
   })
 })
