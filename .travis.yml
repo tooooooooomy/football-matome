@@ -4,9 +4,6 @@ node_js:
 before_install:
     - "curl -L https://raw.githubusercontent.com/arunoda/travis-ci-meteor-packages/master/configure.sh | /bin/sh"
 
-install:
-    - yarn global add codecov
-
 before_script:
     - yarn
     - "export PATH=$HOME/.meteor:$PATH"
