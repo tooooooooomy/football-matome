@@ -2,6 +2,15 @@ language: rust
 rust:
     - stable
 
+dist: trusty
+sudo: required
+addons:
+    apt:
+        packages:
+            - mysql-server-5.6
+            - mysql-client-core-5.6
+            - mysql-client-5.6
+
 before_script:
     - "export PATH=$HOME/.meteor:$PATH"
     # node update
@@ -10,14 +19,6 @@ before_script:
     - npm install -g yarn
     # install cargo env dependency
     - cargo install diesel_cli
-    # set mysql5.6
-    - sudo apt-get remove --purge mysql-common mysql-server-5.5 mysql-server-core-5.5 mysql-client-5.5 mysql-client-core-5.5
-    - sudo apt-get autoremove
-    - sudo apt-get autoclean
-    - sudo apt-add-repository ppa:ondrej/mysql-5.6 -y
-    - sudo apt-get update
-    - sudo apt-get install mysql-server-5.6 mysql-client-5.6
-    - mysql -uroot -e "SET @@global.sql_mode = NO_ENGINE_SUBSTITUTION"
     # create database
     - mysql -e 'CREATE DATABASE test_football_matome;'
 
