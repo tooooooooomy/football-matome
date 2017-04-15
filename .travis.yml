@@ -6,7 +6,7 @@ before_install:
 before_script:
     - "export PATH=$HOME/.meteor:$PATH"
 
-cache:yarn
+cache: yarn
 
 script:
     - make travis
