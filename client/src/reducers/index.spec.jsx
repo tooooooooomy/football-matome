@@ -18,19 +18,19 @@ describe('feeds', () => {
   })
 
   it('should handle RECEIVE_FEEDS action', () => {
-    const feeds_array = [{
+    const feedsArray = [{
       id: 1,
       title: 'hoge',
       link: 'http://google.com',
     }]
     const action = {
       type: 'RECEIVE_FEEDS',
-      feeds: feeds_array,
+      feeds: feedsArray,
     }
 
     assert.deepStrictEqual(feeds(undefined, action), {
       isFetching: false,
-      items: feeds_array,
+      items: feedsArray,
     })
   })
 })

@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { fetchFeeds, openLink } from '../actions'
 import Feeds from '../components/Feeds'
 import MainAppBar from '../components/MainAppBar'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 class App extends Component {
-  static PropTypes = {
+  static propTypes = {
     feeds: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -17,7 +17,7 @@ class App extends Component {
     dispatch(fetchFeeds())
   }
 
-  handleClick = ( row, column, event ) => {
+  handleClick = (row) => {
     const { feeds } = this.props
     openLink(feeds[row].link)
   }
@@ -30,12 +30,12 @@ class App extends Component {
         <div style={{ paddingTop: 64 }}>
           <MainAppBar />
           {isEmpty ? (isFetching ? <h2>Loading...</h2> : <h2>Empty.</h2>)
-          : <div style = {{ opacity: isFetching ? 0.5 : 1 }}>
-              <Feeds
-                feeds={feeds}
-                onClick={this.handleClick}
-              />
-            </div>
+              : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
+                <Feeds
+                  feeds={feeds}
+                  onClick={this.handleClick}
+                />
+              </div>
           }
         </div>
       </MuiThemeProvider>
@@ -43,10 +43,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     isFetching,
-    items: feeds
+    items: feeds,
   } = state.feeds || {
     isFetching: true,
     items: [],

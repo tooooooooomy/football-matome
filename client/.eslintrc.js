@@ -8,7 +8,17 @@ module.exports = {
         'import',
     ],
     rules: {
-        semi: ["error", "never"]
+        'import/first': 'off',
+        'jsx-a11y/label-has-for': 'off',
+        semi: ['error', 'never'],
+        'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.spec.js*'] }],
+        'no-alert': 'off',
+        'no-console': 'off',
+        'no-nested-ternary': 'off',
+        'no-underscore-dangle': 'off',
+        'react/forbid-prop-types': 'off',
+        'react/no-multi-comp': 'off',
+        'react/require-default-props': 'off',
     },
     settings: {
         'import/resolver': 'webpack',

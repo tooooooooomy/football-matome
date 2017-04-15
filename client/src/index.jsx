@@ -14,12 +14,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 const store = createStore(
   reducer,
-  applyMiddleware(...middleware)
+  applyMiddleware(...middleware),
 )
 
 render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 )

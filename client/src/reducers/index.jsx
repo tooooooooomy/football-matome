@@ -2,7 +2,7 @@ import { REQUEST_FEEDS, RECEIVE_FEEDS } from '../actions'
 import { combineReducers } from 'redux'
 
 export const feeds = (state = {}, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case REQUEST_FEEDS:
       return {
         ...state,
@@ -23,4 +23,4 @@ const reducers = combineReducers({
   feeds,
 })
 
-export default reducers;
+export default reducers
