@@ -10,8 +10,8 @@ cache: yarn
 
 script:
     - make travis
-    - cd ./nodes/ && make
-    - cd ./nodes/ && make test
+    - cd ./client/ && make
+    - cd ./client/ && make test
 
 git:
     submodules: false
