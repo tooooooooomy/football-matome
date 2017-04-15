@@ -9,7 +9,7 @@
     "test:script": "env NODE_PATH=src/ mocha --opts test/mocha.opts \"src/*/*.spec.js*\"",
     "lint": "eslint --fix --ext .js,.jsx src test",
     "webpack": "webpack",
-    "watch": "webpack --watch"
+    "webpack:watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
