@@ -12,3 +12,6 @@ set-vagrant-env:
 
 set-travis-env:
 	ln -snf ./.env.travis ./.env
+
+test:
+	cargo test

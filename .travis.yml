@@ -1,8 +1,6 @@
-language: node_js
-node_js:
-    - "6.9.1"
-before_install:
-    - "curl -L https://raw.githubusercontent.com/arunoda/travis-ci-meteor-packages/master/configure.sh | /bin/sh"
+language: rust
+rust:
+    - stable
 
 before_script:
     - "export PATH=$HOME/.meteor:$PATH"
@@ -11,7 +9,8 @@ cache: yarn
 
 script:
     - make travis
-    - cd ./client/ && make
+    - make test
+    - cd ./client/ && npm install -g yarn && make
     - make test
 
 git:
