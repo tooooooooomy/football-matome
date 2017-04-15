@@ -1,7 +1,7 @@
 [package]
 name = "football-matome"
 version = "0.1.0"
-authors = ["Tomy <kazushige.tominaga@mkt-apps.com>"]
+authors = ["Tomy <kazu9su@gmail.com>"]
 
 [dependencies]
 hyper = "*"
