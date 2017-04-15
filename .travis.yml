@@ -14,4 +14,4 @@ script:
     - cd ./nodes/ && make test
 
 git:
-    submosules: false
+    submodules: false
