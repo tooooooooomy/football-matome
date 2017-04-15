@@ -12,3 +12,6 @@ script:
     - make travis
     - cd ./nodes/ && make
     - cd ./nodes/ && make test
+
+git:
+    submosules: false
