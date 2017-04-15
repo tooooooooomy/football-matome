@@ -9,7 +9,6 @@ before_script:
     - nvm use 6
     - npm install -g yarn
     - cargo install diesel_cli
-    - make migrate
 
 services:
     - mysql
@@ -18,6 +17,7 @@ cache: yarn
 
 script:
     - make travis
+    - make migrate
     - make test
     - cd ./client/ && make
     - make test
