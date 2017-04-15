@@ -15,3 +15,6 @@ set-travis-env:
 
 test:
 	cargo test
+
+migrate:
+	diesel migration run
