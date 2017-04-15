@@ -4,7 +4,11 @@ rust:
 
 before_script:
     - "export PATH=$HOME/.meteor:$PATH"
+    - mysql -e 'CREATE DATABASE football_matome;'
     - mysql -e 'CREATE DATABASE test_football_matome;'
+    - nvm install 6
+    - nvm use 6
+    - npm install -g yarn
 
 services:
     - mysql
@@ -14,7 +18,7 @@ cache: yarn
 script:
     - make travis
     - make test
-    - cd ./client/ && npm install -g yarn && make
+    - cd ./client/ && make
     - make test
 
 git:
