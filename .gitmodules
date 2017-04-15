@@ -1,0 +1,3 @@
+[submodule "submodules/local-git"]
+	path = submodules/local-git
+	url = /srv/work/local-git
