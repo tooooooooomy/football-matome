@@ -13,7 +13,7 @@ before_script:
     - sudo apt-get autoclean
     - sudo apt-add-repository ppa:ondrej/mysql-5.6 -y
     - sudo apt-get update
-    - sudo apt-get install mysql-common mysql-server-5.6 mysql-client-5.6
+    - sudo apt-get install mysql-common-5.6 mysql-server-5.6 mysql-client-5.6
     # install cargo env dependency
     - cargo install diesel_cli
     # create database
