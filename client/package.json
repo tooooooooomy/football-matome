@@ -13,11 +13,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/toooooooomy/football-matome.git"
+    "url": "git+ssh://git@github.com:kazu9su/football-matome.git"
   },
   "author": "Tomy",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/toooooooomy/football-matome#readme",
+  "homepage": "https://github.com/kazu9su/football-matome",
   "devDependencies": {
     "babel-core": "^6.14.0",
     "babel-eslint": "^7.1.1",
