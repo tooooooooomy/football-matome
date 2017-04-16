@@ -11,21 +11,19 @@ pub struct ResFeed {
 }
 
 pub fn retrieve(conn: &MysqlConnection) -> Vec<ResFeed>{
-    let results = feeds
+    feeds
         .limit(20)
         .load::<Feed>(conn)
-        .expect("Error loading feeds");
+        .expect("Error loading feeds")
+        .into_iter()
+        .map(|feed| make_res_feed_from_feed(feed))
+        .collect::<Vec<ResFeed>>()
+}
 
-    let mut v: Vec<ResFeed> = vec![];
-    for row in results {
-        let feed = ResFeed {
-            id: row.id,
-            title: row.title,
-            link: row.link,
-        };
-
-        v.push(feed);
+fn make_res_feed_from_feed (feed: Feed) -> ResFeed {
+    ResFeed {
+        id: feed.id,
+        title: feed.title,
+        link: feed.link,
     }
-
-    v
 }
