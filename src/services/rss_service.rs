@@ -24,8 +24,7 @@ pub fn retrieve(conn: &MysqlConnection) -> Vec<ResFeed>{
 fn test_retrieve() {
     use dotenv::dotenv;
     use std::env;
-    use diesel::ExecuteDsl;
-    use diesel::LoadDsl;
+    use diesel::*;
     use models::feed;
     use models::connection;
 
