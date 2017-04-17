@@ -1,6 +1,7 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate diesel_codegen;
 
+extern crate dotenv;
 extern crate rustc_serialize;
 extern crate chrono;
 

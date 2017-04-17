@@ -3,7 +3,7 @@ use diesel::mysql::MysqlConnection;
 use models::feed::Feed;
 use schema::feeds::dsl::*;
 
-#[derive(RustcEncodable)]
+#[derive(RustcEncodable, Debug, PartialEq)]
 pub struct ResFeed {
     id: i32,
     title: String,
@@ -11,21 +11,78 @@ pub struct ResFeed {
 }
 
 pub fn retrieve(conn: &MysqlConnection) -> Vec<ResFeed>{
-    let results = feeds
+    feeds
         .limit(20)
         .load::<Feed>(conn)
-        .expect("Error loading feeds");
+        .expect("Error loading feeds")
+        .into_iter()
+        .map(|feed| make_res_feed_from_feed(feed))
+        .collect::<Vec<ResFeed>>()
+}
 
-    let mut v: Vec<ResFeed> = vec![];
-    for row in results {
-        let feed = ResFeed {
-            id: row.id,
-            title: row.title,
-            link: row.link,
-        };
+#[test]
+fn test_retrieve() {
+    use dotenv::dotenv;
+    use std::env;
+    use diesel::ExecuteDsl;
+    use diesel::LoadDsl;
+    use models::feed;
+    use models::connection;
 
-        v.push(feed);
+    dotenv().ok();
+    let database_url = env::var("TEST_DATABASE_URL")
+        .expect("TEST_DATABASE_URL must be set");
+
+    let connection = connection::establish_connection(&database_url);
+    connection.execute("truncate table feeds;").unwrap();
+
+    let title_1 = "hoge";
+    let link_1 = "http://hoge.com";
+    let title_2 = "fuga";
+    let link_2 = "http://fuga.com";
+
+    feed::create_feed(&connection, &title_1, &link_1);
+    feed::create_feed(&connection, &title_2, &link_2);
+
+    let result = retrieve(&connection);
+    let expected: Vec<ResFeed> = vec![ ResFeed {
+        id: 1,
+        title: title_1.to_string(),
+        link: link_1.to_string(),
+    }, ResFeed {
+        id: 2,
+        title: title_2.to_string(),
+        link: link_2.to_string(),
+    }];
+
+    assert_eq!(expected, result);
+}
+
+fn make_res_feed_from_feed(feed: Feed) -> ResFeed {
+    ResFeed {
+        id: feed.id,
+        title: feed.title,
+        link: feed.link,
     }
+}
 
-    v
+#[test]
+fn test_make_res_feed_from_feed() {
+    use chrono::prelude::*;
+
+    let expected = ResFeed {
+        id: 1,
+        title: "hoge".to_string(),
+        link: "http://hoge.com".to_string(),
+    };
+
+    let result = make_res_feed_from_feed(Feed {
+        id: 1,
+        title: "hoge".to_string(),
+        link: "http://hoge.com".to_string(),
+        created_at: UTC::now().naive_utc(),
+        updated_at: UTC::now().naive_utc(),
+    });
+
+    assert_eq!(expected, result);
 }
