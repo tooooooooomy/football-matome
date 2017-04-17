@@ -6,7 +6,7 @@
 これは最新の技術を駆使してまとめサイトを自分好みに作ろうというモチベーションで始めたプロジェクトです。
 
 ## このコードベースで動いているWebサイト
-http://kazu9su.com/football-matome/
+https://kazu9su.com/football-matome/
 
 ## サーバーサイド
 * Rust
