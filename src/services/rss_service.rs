@@ -33,7 +33,7 @@ fn test_retrieve() {
         .expect("TEST_DATABASE_URL must be set");
 
     let connection = connection::establish_connection(&database_url);
-    connection.execute("truncate table feeds;").unwrap();
+    connection.execute("TRUNCATE TABLE feeds").unwrap();
 
     let title_1 = "hoge";
     let link_1 = "http://hoge.com";
