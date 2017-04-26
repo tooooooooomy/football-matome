@@ -10,8 +10,6 @@ use nickel::status::*;
 use nickel::mimes::MediaType;
 use dotenv::dotenv;
 use std::env;
-use football_matome::services::feed_service;
-use football_matome::models::connection;
 
 #[derive(RustcEncodable)]
 pub struct ResponseBody {
