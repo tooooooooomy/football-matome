@@ -18,6 +18,7 @@ pub struct ResponseBody {
     data: Vec<rss_service::ResFeed>,
 }
 
+#[allow(unreachable_code, unused_variables, resolve_trait_on_defaulted_unit)]
 fn main() {
     let mut server = Nickel::new();
     dotenv().ok();
