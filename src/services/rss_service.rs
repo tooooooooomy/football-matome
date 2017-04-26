@@ -20,44 +20,6 @@ pub fn retrieve(conn: &MysqlConnection) -> Vec<ResFeed>{
         .collect::<Vec<ResFeed>>()
 }
 
-#[test]
-fn test_retrieve() {
-    use dotenv::dotenv;
-    use std::env;
-    use diesel::ExecuteDsl;
-    use diesel::LoadDsl;
-    use models::feed;
-    use models::connection;
-
-    dotenv().ok();
-    let database_url = env::var("TEST_DATABASE_URL")
-        .expect("TEST_DATABASE_URL must be set");
-
-    let connection = connection::establish_connection(&database_url);
-    connection.execute("truncate table feeds;").unwrap();
-
-    let title_1 = "hoge";
-    let link_1 = "http://hoge.com";
-    let title_2 = "fuga";
-    let link_2 = "http://fuga.com";
-
-    feed::create_feed(&connection, &title_1, &link_1);
-    feed::create_feed(&connection, &title_2, &link_2);
-
-    let result = retrieve(&connection);
-    let expected: Vec<ResFeed> = vec![ ResFeed {
-        id: 1,
-        title: title_1.to_string(),
-        link: link_1.to_string(),
-    }, ResFeed {
-        id: 2,
-        title: title_2.to_string(),
-        link: link_2.to_string(),
-    }];
-
-    assert_eq!(expected, result);
-}
-
 fn make_res_feed_from_feed(feed: Feed) -> ResFeed {
     ResFeed {
         id: feed.id,
@@ -66,23 +28,62 @@ fn make_res_feed_from_feed(feed: Feed) -> ResFeed {
     }
 }
 
-#[test]
-fn test_make_res_feed_from_feed() {
+#[cfg(test)]
+mod tests {
+    use dotenv::dotenv;
+    use std::env;
+    use diesel::result::Error;
+    use models::feed;
+    use models::connection;
     use chrono::prelude::*;
+    use schema::feeds::dsl::*;
+    use super::*;
 
-    let expected = ResFeed {
-        id: 1,
-        title: "hoge".to_string(),
-        link: "http://hoge.com".to_string(),
-    };
+    #[test]
+    fn test_retrieve() {
+        dotenv().ok();
+        let database_url = env::var("TEST_DATABASE_URL")
+            .expect("TEST_DATABASE_URL must be set");
 
-    let result = make_res_feed_from_feed(Feed {
-        id: 1,
-        title: "hoge".to_string(),
-        link: "http://hoge.com".to_string(),
-        created_at: UTC::now().naive_utc(),
-        updated_at: UTC::now().naive_utc(),
-    });
+        let connection = connection::establish_connection(&database_url);
+        connection.execute("truncate table feeds").unwrap();
 
-    assert_eq!(expected, result);
+        connection.test_transaction::<_, Error, _>(|| {
+            let title_1 = "hoge";
+            let link_1 = "http://hoge.com";
+            let title_2 = "fuga";
+            let link_2 = "http://fuga.com";
+
+            feed::create_feed(&connection, &title_1, &link_1);
+            feed::create_feed(&connection, &title_2, &link_2);
+
+            let result = retrieve(&connection);
+            assert_eq!("hoge", result[0].title);
+            assert_eq!("http://hoge.com", result[0].link);
+            assert_eq!("fuga", result[1].title);
+            assert_eq!("http://fuga.com", result[1].link);
+
+            Ok(())
+        })
+    }
+
+    #[test]
+    fn test_make_res_feed_from_feed() {
+
+        let expected = ResFeed {
+            id: 1,
+            title: "hoge".to_string(),
+            link: "http://hoge.com".to_string(),
+        };
+
+        let result = make_res_feed_from_feed(Feed {
+            id: 1,
+            title: "hoge".to_string(),
+            link: "http://hoge.com".to_string(),
+            created_at: UTC::now().naive_utc(),
+            updated_at: UTC::now().naive_utc(),
+        });
+
+        assert_eq!(expected, result);
+    }
 }
