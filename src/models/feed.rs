@@ -32,25 +32,32 @@ pub fn create_feed(conn: &MysqlConnection, title: &str, link: &str) {
         .expect("Error saving new feed");
 }
 
-#[test]
-fn test_create_feed() {
+#[cfg(test)]
+mod tests {
     use dotenv::dotenv;
     use std::env;
     use models::connection;
     use schema::feeds::dsl::*;
+    use diesel::result::Error;
+    use super::*;
 
-    dotenv().ok();
-    let database_url = env::var("TEST_DATABASE_URL")
-        .expect("TEST_DATABASE_URL must be set");
+    #[test]
+    fn test_create_feed() {
 
-    let connection = connection::establish_connection(&database_url);
-    connection.execute("truncate table feeds;").unwrap();
+        dotenv().ok();
+        let database_url = env::var("TEST_DATABASE_URL")
+            .expect("TEST_DATABASE_URL must be set");
+        let connection = connection::establish_connection(&database_url);
+        connection.execute("truncate table feeds").unwrap();
 
-    create_feed(&connection, "hoge", "http://hoge.com");
+        connection.test_transaction::<_, Error, _>(|| {
+            create_feed(&connection, "hoge", "http://hoge.com");
 
-    let record = feeds.first::<Feed>(&connection).unwrap();
+            let record = feeds.first::<Feed>(&connection).unwrap();
 
-    assert_eq!(1, record.id);
-    assert_eq!("hoge", record.title);
-    assert_eq!("http://hoge.com", record.link);
+            assert_eq!("hoge", record.title);
+            assert_eq!("http://hoge.com", record.link);
+            Ok(())
+        });
+    }
 }
