@@ -36,7 +36,6 @@ mod tests {
     use models::feed;
     use models::connection;
     use chrono::prelude::*;
-    use schema::feeds::dsl::*;
     use super::*;
 
     #[test]
