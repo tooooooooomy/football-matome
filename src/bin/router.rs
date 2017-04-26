@@ -10,12 +10,12 @@ use nickel::status::*;
 use nickel::mimes::MediaType;
 use dotenv::dotenv;
 use std::env;
-use football_matome::services::rss_service;
+use football_matome::services::feed_service;
 use football_matome::models::connection;
 
 #[derive(RustcEncodable)]
 pub struct ResponseBody {
-    data: Vec<rss_service::ResFeed>,
+    data: Vec<feed_service::ResFeed>,
 }
 
 #[allow(unreachable_code, unused_variables, resolve_trait_on_defaulted_unit)]
@@ -29,7 +29,7 @@ fn main() {
         let connection = connection::establish_connection(&database_url);
 
         let body = ResponseBody {
-            data: rss_service::retrieve(&connection),
+            data: feed_service::retrieve(&connection),
         };
         let json_obj = json::encode(&body).unwrap();
         response.set(MediaType::Json);
