@@ -1,16 +1,17 @@
 use std::env;
-use football_matome::services::feed_service;
-use football_matome::models::connection;
+use services::feed_service;
+use models::connection;
 use nickel::{Request, Response, MiddlewareResult};
 use nickel::mimes::MediaType;
 use nickel::status::*;
+use rustc_serialize::json;
 
 #[derive(RustcEncodable)]
 pub struct ResponseBody {
     data: Vec<feed_service::ResFeed>,
 }
 
-pub fn get_feed<'mw>(_req: Request, res: &mut res<'mw>) -> MiddlewareResult<'mw> {
+pub fn get_feed<'mw>(_req: &mut Request, mut res: Response<'mw>) -> MiddlewareResult<'mw> {
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
     let connection = connection::establish_connection(&database_url);
@@ -23,5 +24,5 @@ pub fn get_feed<'mw>(_req: Request, res: &mut res<'mw>) -> MiddlewareResult<'mw>
     res.set(MediaType::Json);
     res.set(StatusCode::Ok);
 
-    res.send(json_obj);
+    res.send(json_obj)
 }
