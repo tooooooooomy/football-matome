@@ -5,6 +5,7 @@ extern crate dotenv;
 extern crate rustc_serialize;
 extern crate chrono;
 
+pub mod app;
 pub mod schema;
 pub mod models;
 pub mod libraries;
