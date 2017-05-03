@@ -1,11 +1,14 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate diesel_codegen;
-
-extern crate dotenv;
-extern crate rustc_serialize;
 extern crate chrono;
+extern crate dotenv;
+extern crate hyper;
+extern crate nickel;
+extern crate rustc_serialize;
 
-pub mod schema;
+pub mod app;
+pub mod controllers;
 pub mod models;
 pub mod libraries;
+pub mod schema;
 pub mod services;
