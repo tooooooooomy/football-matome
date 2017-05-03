@@ -1,6 +1,5 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate diesel_codegen;
-#[macro_use] #[allow(unused_imports)] extern crate lazy_static;
 extern crate chrono;
 extern crate dotenv;
 extern crate hyper;
