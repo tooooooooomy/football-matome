@@ -18,3 +18,9 @@ test:
 
 migrate:
 	diesel migration run
+
+rust-update:
+	curl -s https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly
+
+lint:
+	cargo build --features="clippy"
