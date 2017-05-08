@@ -14,3 +14,7 @@ nickel = "*"
 rustc-serialize = "*"
 chrono = "*"
 lazy_static = "*"
+clippy = {version = "*", optional = true}
+
+[features]
+default = []
