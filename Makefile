@@ -14,7 +14,7 @@ set-travis-env:
 	ln -snf ./.env.travis ./.env
 
 test:
-	cargo test
+	cargo test -- --test-threads=1
 
 migrate:
 	diesel migration run

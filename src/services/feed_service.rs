@@ -57,10 +57,18 @@ mod tests {
             feed::create_feed(&connection, &title_2, &link_2);
 
             let result = retrieve(&connection);
-            assert_eq!("hoge", result[0].title);
-            assert_eq!("http://hoge.com", result[0].link);
-            assert_eq!("fuga", result[1].title);
-            assert_eq!("http://fuga.com", result[1].link);
+
+            let expected: Vec<ResFeed> = vec![ ResFeed {
+                id: 1,
+                title: title_1.to_string(),
+                link: link_1.to_string(),
+                }, ResFeed {
+                id: 2,
+                title: title_2.to_string(),
+                link: link_2.to_string(),
+            }];
+
+            assert_eq!(expected, result);
 
             Ok(())
         })
