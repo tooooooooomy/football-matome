@@ -15,6 +15,7 @@ rustc-serialize = "*"
 chrono = "*"
 lazy_static = "*"
 clippy = {version = "*", optional = true}
+mockito = "*"
 
 [features]
 default = []

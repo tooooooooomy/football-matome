@@ -7,27 +7,26 @@ use self::hyper::error::Result;
 use std::io::BufReader;
 use self::xml::reader::{EventReader, XmlEvent};
 
-pub struct Feed {
+pub struct FeedRetriever {
     url: String
 }
 
-impl Feed {
-    pub fn new(url:&str) -> Feed {
-        Feed {
+impl FeedRetriever {
+    pub fn new(url:&str) -> FeedRetriever {
+        FeedRetriever {
             url: url.to_string()
         }
     }
 
     pub fn get_item_list(&self) -> (Vec<String>, Vec<String>) {
-        let feed = Feed::get_feed(self.url.as_str());
+        let feed = FeedRetriever::get_feed(self.url.as_str());
 
         match feed {
             Ok(v) => {
-                return Feed::extract_item_list(v);
+                return FeedRetriever::extract_item_list(v);
             }
             Err(e) => {
-                println!("Error: {}", e);
-                return (Vec::new(), Vec::new());
+                return e;
             }
         }
     }
@@ -35,9 +34,8 @@ impl Feed {
     fn get_feed(url: &str) -> Result<Response> {
         let client = Client::new();
         let response_builder = client.get(url);
-        let result = response_builder.send();
 
-        return result;
+        response_builder.send()
     }
 
     fn extract_item_list(res:Response) -> (Vec<String>, Vec<String>){
@@ -70,12 +68,14 @@ impl Feed {
                     }
                 }
                 Ok(XmlEvent::Characters(text)) => {
-                    if in_item_elm {
-                        if in_title_elm {
-                            title_list.push(text.trim().to_string());
-                        } else if in_link_elm {
-                            link_list.push(text.trim().to_string());
-                        }
+                    if !in_item_elm {
+                        continue;
+                    }
+
+                    if in_title_elm {
+                        title_list.push(text.trim().to_string());
+                    } else if in_link_elm {
+                        link_list.push(text.trim().to_string());
                     }
                 }
                 Err(e) => {
@@ -86,7 +86,38 @@ impl Feed {
             }
         }
 
-        return (title_list, link_list);
+        (title_list, link_list)
     }
 }
 
+#[cfg(test)]
+mod tests {
+
+    use mockito;
+
+    const URL: &'static str = mockito::SERVER_URL;
+
+    fn create_mock() {
+
+        mockito::mock("GET", "/")
+            .with_status(500)
+            .with_header("content-type", "text/plain")
+            .with_header("x-api-key", "1234")
+            .with_body("hogehoge")
+            .create();
+    }
+
+    #[test]
+    fn test_get_item_list_when_error() {
+        mockito::mock("GET", "/")
+            .with_status(500)
+            .with_header("content-type", "text/plain")
+            .with_header("x-api-key", "1234")
+            .with_body("hogehoge")
+            .create();
+
+        let t = super::FeedRetriever::new(URL);
+
+        assert_eq!(Err, t.get_item_list());
+    }
+}

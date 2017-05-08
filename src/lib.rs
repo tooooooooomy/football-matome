@@ -6,6 +6,7 @@
 extern crate chrono;
 extern crate dotenv;
 extern crate hyper;
+extern crate mockito;
 extern crate nickel;
 extern crate rustc_serialize;
 
