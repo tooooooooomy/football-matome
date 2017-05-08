@@ -62,7 +62,7 @@ mod tests {
                 id: 1,
                 title: title_1.to_string(),
                 link: link_1.to_string(),
-                }, ResFeed {
+            }, ResFeed {
                 id: 2,
                 title: title_2.to_string(),
                 link: link_2.to_string(),
