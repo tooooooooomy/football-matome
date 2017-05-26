@@ -8,25 +8,25 @@ use self::hyper::status::StatusCode;
 use std::io::BufReader;
 use self::xml::reader::{EventReader, XmlEvent};
 
-pub struct FeedRetriever {
+pub struct Retriever {
     url: String
 }
 
-impl FeedRetriever {
-    pub fn new(url:&str) -> FeedRetriever {
-        FeedRetriever {
+impl Retriever {
+    pub fn new(url:&str) -> Retriever {
+        Retriever {
             url: url.to_string()
         }
     }
 
     pub fn get_item_list(&self) -> (Vec<String>, Vec<String>) {
-        let result = FeedRetriever::get_feed(self.url.as_str());
+        let result = Retriever::get_feed(self.url.as_str());
 
         match result {
             Ok(v) => {
                 match v.status {
                     StatusCode::InternalServerError => panic!("Request failed! {:?}", v),
-                    _ => FeedRetriever::extract_item_list(v),
+                    _ => Retriever::extract_item_list(v),
                 }
             }
             Err(e) => panic!("Unknown error occurred! {:?}", e),
@@ -107,7 +107,7 @@ mod tests {
             .with_body("hogehoge")
             .create();
 
-        let t = super::FeedRetriever::new(URL);
+        let t = super::Retriever::new(URL);
 
         t.get_item_list();
     }

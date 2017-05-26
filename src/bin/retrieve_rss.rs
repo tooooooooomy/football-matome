@@ -1,7 +1,7 @@
 extern crate football_matome;
 extern crate dotenv;
 
-use football_matome::libraries::rss_retriever::feed::FeedRetriever;
+use football_matome::libraries::rss_retriever::retriever::Retriever;
 use football_matome::models::connection;
 use football_matome::models::feed;
 use dotenv::dotenv;
@@ -16,7 +16,7 @@ fn main() {
 
     let url = "http://samuraigoal.doorblog.jp/index.rdf";
 
-    let f = FeedRetriever::new(url);
+    let f = Retriever::new(url);
 
     let (title_list, link_list) = f.get_item_list();
 
