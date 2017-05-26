@@ -4,6 +4,7 @@ extern crate xml;
 use self::hyper::Client;
 use self::hyper::client::response::Response;
 use self::hyper::error::Result;
+use self::hyper::status::StatusCode;
 use std::io::BufReader;
 use self::xml::reader::{EventReader, XmlEvent};
 
@@ -19,15 +20,16 @@ impl FeedRetriever {
     }
 
     pub fn get_item_list(&self) -> (Vec<String>, Vec<String>) {
-        let feed = FeedRetriever::get_feed(self.url.as_str());
+        let result = FeedRetriever::get_feed(self.url.as_str());
 
-        match feed {
+        match result {
             Ok(v) => {
-                return FeedRetriever::extract_item_list(v);
+                match v.status {
+                    StatusCode::InternalServerError => panic!("Request failed! {:?}", v),
+                    _ => FeedRetriever::extract_item_list(v),
+                }
             }
-            Err(e) => {
-                return e;
-            }
+            Err(e) => panic!("Unknown error occurred! {:?}", e),
         }
     }
 
@@ -79,8 +81,7 @@ impl FeedRetriever {
                     }
                 }
                 Err(e) => {
-                    println!("Error:{}", e);
-                    break;
+                    panic!("Something wrong! {:?}", e)
                 }
                 _ => {},
             }
@@ -97,27 +98,17 @@ mod tests {
 
     const URL: &'static str = mockito::SERVER_URL;
 
-    fn create_mock() {
-
-        mockito::mock("GET", "/")
-            .with_status(500)
-            .with_header("content-type", "text/plain")
-            .with_header("x-api-key", "1234")
-            .with_body("hogehoge")
-            .create();
-    }
-
     #[test]
+    #[should_panic]
     fn test_get_item_list_when_error() {
         mockito::mock("GET", "/")
             .with_status(500)
             .with_header("content-type", "text/plain")
-            .with_header("x-api-key", "1234")
             .with_body("hogehoge")
             .create();
 
         let t = super::FeedRetriever::new(URL);
 
-        assert_eq!(Err, t.get_item_list());
+        t.get_item_list();
     }
 }
