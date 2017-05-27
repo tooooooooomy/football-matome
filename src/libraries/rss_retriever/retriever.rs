@@ -98,7 +98,6 @@ mod tests {
     use std::fs::File;
     use std::io::prelude::*;
     use std::env;
-    use std::path::Path;
 
     const URL: &'static str = mockito::SERVER_URL;
 
