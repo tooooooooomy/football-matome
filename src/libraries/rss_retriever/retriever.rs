@@ -118,7 +118,7 @@ mod tests {
     #[test]
     fn test_get_item_list() {
         let current_dir = env::current_dir().unwrap();
-        let file_path = format!("{}/src/libraries/rss_retriever/stab/matome.rdf", current_dir.display());
+        let file_path = format!("{}/tests/stabs/matome.rdf", current_dir.display());
         let mut file = File::open(file_path).unwrap();
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
