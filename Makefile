@@ -16,6 +16,9 @@ set-travis-env:
 test:
 	cargo test -- --test-threads=1
 
+test-debug:
+	cargo test -- --test-threads=1 --nocapture
+
 migrate:
 	diesel migration run
 
