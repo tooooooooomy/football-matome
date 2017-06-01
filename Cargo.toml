@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["Tomy <kazu9su@gmail.com>"]
 
 [dependencies]
+toml = "0.4.*"
+serde = "1.*"
+serde_derive = "1.*"
 hyper = "*"
 hyper-native-tls = "*"
 xml-rs = "*"
