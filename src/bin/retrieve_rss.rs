@@ -1,6 +1,7 @@
 extern crate football_matome;
 extern crate dotenv;
 
+use football_matome::config::config;
 use football_matome::libraries::rss_retriever::retriever::Retriever;
 use football_matome::models::connection;
 use football_matome::models::feed;
@@ -14,14 +15,17 @@ fn main() {
 
     let connection = connection::establish_connection(&database_url);
 
-    let url = "http://samuraigoal.doorblog.jp/index.rdf";
+    let sources = config::get_sources();
 
-    let f = Retriever::new(url);
+    for url in sources.iter() {
+        let f = Retriever::new(url);
 
-    let (title_list, link_list) = f.get_item_list();
+        let (title_list, link_list) = f.get_item_list();
 
-    for (n, title) in title_list.iter().enumerate() {
-        println!("{}\n{}\n", title, link_list[n]);
-        feed::create_feed(&connection, title, &link_list[n]);
+        for (n, title) in title_list.iter().enumerate() {
+            println!("{}\n{}\n", title, link_list[n]);
+            feed::create_feed(&connection, title, &link_list[n]);
+        }
     }
 }
+
