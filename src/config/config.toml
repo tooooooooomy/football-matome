@@ -1,0 +1,6 @@
+sources = [
+    "http://samuraigoal.doorblog.jp/index.rdf",
+    "http://www.calciomatome.net/index.rdf",
+    "http://football2channel.blog.fc2.com/?xml",
+    "http://worldfn.net/index.rdf",
+]
