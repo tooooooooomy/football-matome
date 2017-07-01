@@ -1,8 +1,8 @@
 use chrono;
-use schema::feeds;
 use diesel;
 use diesel::*;
 use diesel::mysql::MysqlConnection;
+use schema::feeds;
 
 #[derive(Queryable)]
 pub struct Feed {
@@ -21,7 +21,6 @@ struct NewFeed<'a> {
 }
 
 pub fn create_feed(conn: &MysqlConnection, title: &str, link: &str) {
-
     let new_feed = NewFeed {
         title: title,
         link: link,
@@ -32,32 +31,49 @@ pub fn create_feed(conn: &MysqlConnection, title: &str, link: &str) {
         .expect("Error saving new feed");
 }
 
+pub fn exists(conn: &MysqlConnection, target_title: &str) -> bool {
+    use schema::feeds::dsl::*;
+    match feeds.filter(title.eq(target_title)).count().get_result(conn) {
+        Ok(0) => false,
+        Ok(_) => true,
+        Err(e) => panic!(e),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use dotenv::dotenv;
     use std::env;
     use models::connection;
-    use schema::feeds::dsl::*;
-    use diesel::result::Error;
     use super::*;
+    use schema::feeds::dsl::*;
 
     #[test]
     fn test_create_feed() {
-
         dotenv().ok();
         let database_url = env::var("TEST_DATABASE_URL")
             .expect("TEST_DATABASE_URL must be set");
         let connection = connection::establish_connection(&database_url);
         connection.execute("truncate table feeds").unwrap();
 
-        connection.test_transaction::<_, Error, _>(|| {
-            create_feed(&connection, "hoge", "http://hoge.com");
+        create_feed(&connection, "hoge", "http://hoge.com");
 
-            let record = feeds.first::<Feed>(&connection).unwrap();
+        let record = feeds.first::<Feed>(&connection).unwrap();
 
-            assert_eq!("hoge", record.title);
-            assert_eq!("http://hoge.com", record.link);
-            Ok(())
-        });
+        assert_eq!("hoge", record.title);
+        assert_eq!("http://hoge.com", record.link);
+    }
+
+    #[test]
+    fn test_exists() {
+        dotenv().ok();
+        let database_url = env::var("TEST_DATABASE_URL")
+            .expect("TEST_DATABASE_URL must be set");
+        let connection = connection::establish_connection(&database_url);
+        connection.execute("truncate table feeds").unwrap();
+        create_feed(&connection, "hoge", "http://hoge.com");
+
+        assert!(exists(&connection, "hoge"));
+        assert_ne!(true, exists(&connection, "fuga"));
     }
 }
