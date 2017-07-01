@@ -24,7 +24,9 @@ fn main() {
 
         for (n, title) in title_list.iter().enumerate() {
             println!("{}\n{}\n", title, link_list[n]);
-            feed::create_feed(&connection, title, &link_list[n]);
+            if !feed::exists(&connection, title) {
+                feed::create_feed(&connection, title, &link_list[n]);
+            }
         }
     }
 }
