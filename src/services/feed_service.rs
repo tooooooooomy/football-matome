@@ -12,7 +12,8 @@ pub struct ResFeed {
 
 pub fn retrieve(conn: &MysqlConnection) -> Vec<ResFeed>{
     feeds
-        .limit(20)
+        .limit(100)
+        .order(id.desc())
         .load::<Feed>(conn)
         .expect("Error loading feeds")
         .into_iter()
@@ -59,13 +60,13 @@ mod tests {
             let result = retrieve(&connection);
 
             let expected: Vec<ResFeed> = vec![ ResFeed {
-                id: 1,
-                title: title_1.to_string(),
-                link: link_1.to_string(),
-            }, ResFeed {
                 id: 2,
                 title: title_2.to_string(),
                 link: link_2.to_string(),
+            }, ResFeed {
+                id: 1,
+                title: title_1.to_string(),
+                link: link_1.to_string(),
             }];
 
             assert_eq!(expected, result);
