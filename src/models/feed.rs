@@ -20,7 +20,7 @@ struct NewFeed<'a> {
     pub link: &'a str,
 }
 
-pub fn create_feed(conn: &MysqlConnection, title: &str, link: &str) {
+pub fn create(conn: &MysqlConnection, title: &str, link: &str) {
     let new_feed = NewFeed {
         title: title,
         link: link,
@@ -49,14 +49,14 @@ mod tests {
     use schema::feeds::dsl::*;
 
     #[test]
-    fn test_create_feed() {
+    fn test_create() {
         dotenv().ok();
         let database_url = env::var("TEST_DATABASE_URL")
             .expect("TEST_DATABASE_URL must be set");
         let connection = connection::establish_connection(&database_url);
         connection.execute("truncate table feeds").unwrap();
 
-        create_feed(&connection, "hoge", "http://hoge.com");
+        create(&connection, "hoge", "http://hoge.com");
 
         let record = feeds.first::<Feed>(&connection).unwrap();
 
@@ -71,7 +71,7 @@ mod tests {
             .expect("TEST_DATABASE_URL must be set");
         let connection = connection::establish_connection(&database_url);
         connection.execute("truncate table feeds").unwrap();
-        create_feed(&connection, "hoge", "http://hoge.com");
+        create(&connection, "hoge", "http://hoge.com");
 
         assert!(exists(&connection, "hoge"));
         assert_ne!(true, exists(&connection, "fuga"));

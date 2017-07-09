@@ -1,7 +1,9 @@
 use diesel::prelude::*;
 use diesel::mysql::MysqlConnection;
+use models::feed;
 use models::feed::Feed;
 use schema::feeds::dsl::*;
+use libraries::rss_retriever::retriever::Retriever;
 
 #[derive(RustcEncodable, Debug, PartialEq)]
 pub struct ResFeed {
@@ -29,23 +31,44 @@ fn make_res_feed_from_feed(feed: Feed) -> ResFeed {
     }
 }
 
+pub fn create_feeds(conn: &MysqlConnection, sources: &Vec<String>) {
+    for url in sources.iter() {
+        let (title_list, link_list) = Retriever::new(url).get_item_list();
+
+        for (n, t) in title_list.iter().enumerate() {
+            if !feed::exists(&conn, t) {
+                feed::create(&conn, t, &link_list[n]);
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use dotenv::dotenv;
-    use std::env;
+    use chrono::prelude::*;
     use diesel::result::Error;
+    use dotenv::dotenv;
+    use mockito;
     use models::feed;
     use models::connection;
-    use chrono::prelude::*;
+    use std::env;
+    use std::fs::File;
+    use std::io::prelude::*;
     use super::*;
+
+    const URL: &'static str = mockito::SERVER_URL;
+
+    fn get_connection() -> MysqlConnection {
+        let database_url = env::var("TEST_DATABASE_URL")
+            .expect("TEST_DATABASE_URL must be set");
+
+        connection::establish_connection(&database_url)
+    }
 
     #[test]
     fn test_retrieve() {
         dotenv().ok();
-        let database_url = env::var("TEST_DATABASE_URL")
-            .expect("TEST_DATABASE_URL must be set");
-
-        let connection = connection::establish_connection(&database_url);
+        let connection = get_connection();
         connection.execute("truncate table feeds").unwrap();
 
         connection.test_transaction::<_, Error, _>(|| {
@@ -54,8 +77,8 @@ mod tests {
             let title_2 = "fuga";
             let link_2 = "http://fuga.com";
 
-            feed::create_feed(&connection, &title_1, &link_1);
-            feed::create_feed(&connection, &title_2, &link_2);
+            feed::create(&connection, &title_1, &link_1);
+            feed::create(&connection, &title_2, &link_2);
 
             let result = retrieve(&connection);
 
@@ -94,4 +117,28 @@ mod tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn test_create_feeds() {
+        dotenv().ok();
+
+        let current_dir = env::current_dir().unwrap();
+        let file_path = format!("{}/tests/stabs/matome.rdf", current_dir.display());
+        let mut file = File::open(file_path).unwrap();
+        let mut contents = String::new();
+        file.read_to_string(&mut contents).unwrap();
+
+        mockito::mock("GET", "/")
+            .with_status(200)
+            .with_header("content-type", "text/xml; charset=utf-8")
+            .with_body(&contents)
+            .create();
+
+        let connection = get_connection();
+        connection.execute("truncate table feeds").unwrap();
+        let sources = vec![URL.to_string()];
+
+        //create_feeds(&connection, &sources);
+        //assert_eq!(Ok(10), feeds.count().get_result(&connection));
+   }
 }
