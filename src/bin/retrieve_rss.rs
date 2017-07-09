@@ -12,8 +12,8 @@ fn main() {
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
     let connection = connection::establish_connection(&database_url);
-    let sources = config::get_sources();
+    let sources = config::get_sources().iter().map(|url| url.to_string()).collect::<Vec<String>>();
 
-    feed_service::createa_feeds(&connection, sources);
+    feed_service::create_feeds(&connection, &sources);
 }
 

@@ -31,7 +31,7 @@ fn make_res_feed_from_feed(feed: Feed) -> ResFeed {
     }
 }
 
-pub fn createa_feeds(conn: &MysqlConnection, sources: &'static Vec<String>) {
+pub fn create_feeds(conn: &MysqlConnection, sources: &Vec<String>) {
     for url in sources.iter() {
         let (title_list, link_list) = Retriever::new(url).get_item_list();
 
@@ -45,21 +45,30 @@ pub fn createa_feeds(conn: &MysqlConnection, sources: &'static Vec<String>) {
 
 #[cfg(test)]
 mod tests {
-    use dotenv::dotenv;
-    use std::env;
+    use chrono::prelude::*;
     use diesel::result::Error;
+    use dotenv::dotenv;
+    use mockito;
     use models::feed;
     use models::connection;
-    use chrono::prelude::*;
+    use std::env;
+    use std::fs::File;
+    use std::io::prelude::*;
     use super::*;
+
+    const URL: &'static str = mockito::SERVER_URL;
+
+    fn get_connection() -> MysqlConnection {
+        let database_url = env::var("TEST_DATABASE_URL")
+            .expect("TEST_DATABASE_URL must be set");
+
+        return connection::establish_connection(&database_url);
+    }
 
     #[test]
     fn test_retrieve() {
         dotenv().ok();
-        let database_url = env::var("TEST_DATABASE_URL")
-            .expect("TEST_DATABASE_URL must be set");
-
-        let connection = connection::establish_connection(&database_url);
+        let connection = get_connection();
         connection.execute("truncate table feeds").unwrap();
 
         connection.test_transaction::<_, Error, _>(|| {
@@ -108,4 +117,28 @@ mod tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn test_create_feeds() {
+        dotenv().ok();
+
+        let current_dir = env::current_dir().unwrap();
+        let file_path = format!("{}/tests/stabs/matome.rdf", current_dir.display());
+        let mut file = File::open(file_path).unwrap();
+        let mut contents = String::new();
+        file.read_to_string(&mut contents).unwrap();
+
+        mockito::mock("GET", "/")
+            .with_status(200)
+            .with_header("content-type", "text/xml; charset=utf-8")
+            .with_body(&contents)
+            .create();
+
+        let connection = get_connection();
+        connection.execute("truncate table feeds").unwrap();
+        let sources = vec![URL.to_string()];
+
+        create_feeds(&connection, &sources);
+        assert_eq!(Ok(10), feeds.count().get_result(&connection));
+   }
 }
