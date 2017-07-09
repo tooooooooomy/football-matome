@@ -1,7 +1,9 @@
 use diesel::prelude::*;
 use diesel::mysql::MysqlConnection;
+use models::feed;
 use models::feed::Feed;
 use schema::feeds::dsl::*;
+use libraries::rss_retriever::retriever::Retriever;
 
 #[derive(RustcEncodable, Debug, PartialEq)]
 pub struct ResFeed {
@@ -26,6 +28,18 @@ fn make_res_feed_from_feed(feed: Feed) -> ResFeed {
         id: feed.id,
         title: feed.title,
         link: feed.link,
+    }
+}
+
+pub fn createa_feeds(conn: &MysqlConnection, sources: &'static Vec<String>) {
+    for url in sources.iter() {
+        let (title_list, link_list) = Retriever::new(url).get_item_list();
+
+        for (n, t) in title_list.iter().enumerate() {
+            if !feed::exists(&conn, t) {
+                feed::create(&conn, t, &link_list[n]);
+            }
+        }
     }
 }
 
@@ -54,8 +68,8 @@ mod tests {
             let title_2 = "fuga";
             let link_2 = "http://fuga.com";
 
-            feed::create_feed(&connection, &title_1, &link_1);
-            feed::create_feed(&connection, &title_2, &link_2);
+            feed::create(&connection, &title_1, &link_1);
+            feed::create(&connection, &title_2, &link_2);
 
             let result = retrieve(&connection);
 
