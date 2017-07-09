@@ -19,6 +19,7 @@ chrono = "*"
 lazy_static = "*"
 clippy = {version = "*", optional = true}
 mockito = "*"
+schedule = "*"
 
 [features]
 default = []
