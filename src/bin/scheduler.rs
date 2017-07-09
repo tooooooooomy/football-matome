@@ -19,7 +19,7 @@ fn main() {
         let sources = config::get_sources().iter().map(|url| url.to_string()).collect::<Vec<String>>();
 
         feed_service::create_feeds(&connection, &sources);
-    }, "0 * * * * *".parse().unwrap()));
+    }, "0 0 * * * *".parse().unwrap()));
 
     loop {
         a.run_pending();
