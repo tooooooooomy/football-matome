@@ -62,7 +62,7 @@ mod tests {
         let database_url = env::var("TEST_DATABASE_URL")
             .expect("TEST_DATABASE_URL must be set");
 
-        return connection::establish_connection(&database_url);
+        connection::establish_connection(&database_url)
     }
 
     #[test]
