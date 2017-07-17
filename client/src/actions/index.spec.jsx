@@ -2,7 +2,7 @@ import assert from 'power-assert'
 import fetchMock from 'fetch-mock'
 import thunk from 'redux-thunk'
 import configMockStore from 'redux-mock-store'
-import WindowMock from 'window-mock'
+import sinon from 'sinon'
 
 const middleware = [thunk]
 const mockStore = configMockStore(middleware)
@@ -70,12 +70,11 @@ describe('fetchFeeds', () => {
 
 describe('openLink', () => {
   it('set link to window.location.href', () => {
-    const windowMock = new WindowMock()
-    global.window = windowMock
+    const spy = sinon.spy(global.window, 'open')
     const link = 'http://hoge.com'
     openLink(link)
 
-      console.log(global.window)
-    //assert(link, global.window.URL)
+    assert(spy.callCount === 1)
+    assert(spy.getCall(0).args[0] === link)
   })
 })

@@ -18,6 +18,6 @@ export const fetchFeeds = () => (dispatch) => {
         .then(json => dispatch(receiveFeeds(json)))
 }
 
-export const openLink = (link, target = "_blank") => {
+export const openLink = (link, target = '_blank') => {
   window.open(link, target)
 }
