@@ -75,6 +75,7 @@ describe('openLink', () => {
     const link = 'http://hoge.com'
     openLink(link)
 
-    assert(link, global.window.location.href)
+      console.log(global.window)
+    //assert(link, global.window.URL)
   })
 })
