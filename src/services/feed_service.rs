@@ -82,17 +82,9 @@ mod tests {
 
             let result = retrieve(&connection);
 
-            let expected: Vec<ResFeed> = vec![ ResFeed {
-                id: 2,
-                title: title_2.to_string(),
-                link: link_2.to_string(),
-            }, ResFeed {
-                id: 1,
-                title: title_1.to_string(),
-                link: link_1.to_string(),
-            }];
-
-            assert_eq!(expected, result);
+            assert_eq!(title_2, result[0].title);
+            assert_eq!(title_1, result[1].title);
+            assert_eq!(2, result.len());
 
             Ok(())
         })
@@ -122,23 +114,26 @@ mod tests {
     fn test_create_feeds() {
         dotenv().ok();
 
-        let current_dir = env::current_dir().unwrap();
-        let file_path = format!("{}/tests/stabs/matome.rdf", current_dir.display());
-        let mut file = File::open(file_path).unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
-
-        mockito::mock("GET", "/")
-            .with_status(200)
-            .with_header("content-type", "text/xml; charset=utf-8")
-            .with_body(&contents)
-            .create();
-
         let connection = get_connection();
         connection.execute("truncate table feeds").unwrap();
-        let sources = vec![URL.to_string()];
+        connection.test_transaction::<_, Error, _>(|| {
+            let current_dir = env::current_dir().unwrap();
+            let file_path = format!("{}/tests/stabs/matome.rdf", current_dir.display());
+            let mut file = File::open(file_path).unwrap();
+            let mut contents = String::new();
+            file.read_to_string(&mut contents).unwrap();
 
-        //create_feeds(&connection, &sources);
-        //assert_eq!(Ok(10), feeds.count().get_result(&connection));
+            mockito::mock("GET", "/")
+                .with_status(200)
+                .with_header("content-type", "text/xml; charset=utf-8")
+                .with_body(&contents)
+                .create();
+
+            let sources = vec![URL.to_string()];
+
+            create_feeds(&connection, &sources);
+            assert_eq!(Ok(10), feeds.count().get_result(&connection));
+            Ok(())
+        })
    }
 }
