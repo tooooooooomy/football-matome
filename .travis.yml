@@ -1,6 +1,6 @@
 language: rust
 rust:
-    - stable
+    - 1.19.0
 
 dist: trusty
 sudo: required
