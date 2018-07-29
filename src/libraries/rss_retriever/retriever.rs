@@ -123,7 +123,7 @@ mod tests {
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
 
-        mockito::mock("GET", "/")
+        let _m = mockito::mock("GET", "/")
             .with_status(200)
             .with_header("content-type", "text/xml; charset=utf-8")
             .with_body(&contents)
