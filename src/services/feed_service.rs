@@ -36,6 +36,7 @@ pub fn create_feeds(conn: &MysqlConnection, sources: &Vec<String>) {
         let (title_list, link_list) = Retriever::new(url).get_item_list();
 
         for (n, t) in title_list.iter().enumerate() {
+            println!("{:?}", t);
             if !feed::exists(&conn, t) {
                 feed::create(&conn, t, &link_list[n]);
             }
@@ -111,11 +112,12 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_create_feeds() {
         dotenv().ok();
-
-        let connection = get_connection();
-        connection.execute("truncate table feeds").unwrap();
+        let database_url = env::var("TEST_DATABASE_URL")
+            .expect("TEST_DATABASE_URL must be set");
+        let connection = connection::establish_connection(&database_url);
         connection.test_transaction::<_, Error, _>(|| {
             let current_dir = env::current_dir().unwrap();
             let file_path = format!("{}/tests/stabs/matome.rdf", current_dir.display());
