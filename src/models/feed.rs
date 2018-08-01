@@ -47,6 +47,7 @@ mod tests {
     use models::connection;
     use super::*;
     use schema::feeds::dsl::*;
+    use diesel::result::Error;
 
     #[test]
     fn test_create() {
@@ -70,10 +71,12 @@ mod tests {
         let database_url = env::var("TEST_DATABASE_URL")
             .expect("TEST_DATABASE_URL must be set");
         let connection = connection::establish_connection(&database_url);
-        connection.execute("truncate table feeds").unwrap();
-        create(&connection, "hoge", "http://hoge.com");
+        connection.test_transaction::<_, Error, _>(|| {
+            create(&connection, "hoge", "http://hoge.com");
 
-        assert!(exists(&connection, "hoge"));
-        assert_ne!(true, exists(&connection, "fuga"));
+            assert!(exists(&connection, "hoge"));
+            assert_ne!(true, exists(&connection, "fuga"));
+            Ok(())
+        })
     }
 }
