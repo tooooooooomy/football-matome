@@ -1,17 +1,17 @@
-# Footballまとめプロジェクト
+# Football Matome
 
 [![Build Status](https://travis-ci.org/kazu9su/football-matome.svg?branch=master)](https://travis-ci.org/kazu9su/football-matome)
 
-## 目的
-これは現在自分が興味のある技術を駆使してまとめサイトを自分好みに作ろうというモチベーションで始めたプロジェクトです。
+## What is this?
+I made this site to try using technologies I have interested in.
 
-## このコードベースで動いているWebサイト
+## The website based on this code
 https://kazu9su.com/football-matome/
 
-## サーバーサイド
+## Backend
 * Rust
 
-## フロントエンド
+## Frontend
 * ES6
 * react + redux
 * Material-UI
