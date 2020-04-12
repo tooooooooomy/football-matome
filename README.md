@@ -15,3 +15,6 @@ https://kazu9su.com/football-matome/
 * ES6
 * react + redux
 * Material-UI
+
+## Confirmed Rust version
+`rustc 1.29.0-nightly (e06c87544 2018-07-06)`
