@@ -63,6 +63,6 @@
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.1.0",
     "sinon": "^1.17.7",
-    "urijs": "^1.18.5"
+    "urijs": "^1.19.7"
   }
 }
