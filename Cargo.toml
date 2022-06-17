@@ -10,7 +10,7 @@ serde_derive = "1.*"
 hyper = "0.10.9"
 hyper-native-tls = "*"
 xml-rs = "0.4.1"
-diesel = { version = "0.11.0", features = ["chrono"] }
+diesel = { version = "1.4.6", features = ["chrono"] }
 diesel_codegen = { version = "0.11.0", features = ["mysql"] }
 dotenv = "0.8.0"
 nickel = "*"
